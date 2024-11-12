@@ -4,6 +4,7 @@ import { seconds, ThrottlerModule } from '@nestjs/throttler';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { ProjectThrottlerGuard } from './throttler.guard';
+import Redis from 'ioredis';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { ProjectThrottlerGuard } from './throttler.guard';
             limit: Number(configService.get('app').throttleLimit),
           },
         ],
-        storage: new ThrottlerStorageRedisService(),
+        storage: new ThrottlerStorageRedisService(new Redis(configService.get('redis').url)),
       }),
     }),
   ],
